@@ -27,5 +27,5 @@ dviide.callback('data');
 
 If you want access to things such as the ip and port of the server just take a look at the dviide class in inject.js.
 
-##Servers and Listeners
+## Servers and Listeners
 By default the backend listens on port 3000 for incoming client connections. It also runs a small webserver on port 3030 which just serves the inject.js file.
