@@ -1,4 +1,4 @@
-var config = {"ip":"http://192.168.0.164", 'ioport': '3000', 'webport': '3030', "injectjquery": true}, socket, id, dviide;
+var config = {"ip":"http://?", 'ioport': '3000', 'webport': '3030', "injectjquery": true}, socket, id, dviide;
 (function() {
   if(config.injectjquery) {
     injectScript('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js', true, function() {
