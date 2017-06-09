@@ -1,0 +1,17 @@
+{
+  "name": "dviide",
+  "version": "0.1.1",
+  "description": "A simple javascript injection framework for the console.",
+  "main": "backend.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Vincent Brouwer",
+  "license": "MIT",
+  "dependencies": {
+    "cli-clear": "^1.0.4",
+    "colors": "^1.1.2",
+    "express": "^4.15.3",
+    "socket.io": "^2.0.2"
+  }
+}
