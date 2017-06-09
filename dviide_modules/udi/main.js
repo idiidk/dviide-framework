@@ -24,6 +24,6 @@ this.start = function() {
       }
     }
   );
-  var res = getRotationDegrees($('body')) == 180 ? 'up!' : 'down!';
+  var res = getRotationDegrees($('body')) == 180 ? 'upside up!' : 'upside down!';
   dviide.callback('Flipped ' + res);
 }
