@@ -42,7 +42,6 @@ function afterInject() {
       var module = new func();
       module.start();
     });
-
   });
 }
 
