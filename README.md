@@ -1,4 +1,4 @@
-# DviideFramework
+# dviide-framework
 Dviide is a javascript mitm/xss framework built in node.js with easily writable modules.
 
 ## Installation
