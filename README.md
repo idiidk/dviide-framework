@@ -5,8 +5,8 @@ Dviide is a javascript mitm/xss framework built in node.js with easily writable 
 
 To initialize the server and listeners:
 ```bash
-git clone https://github.com/idiidk/DviideFramework.git
-cd DviideFramework
+git clone https://github.com/idiidk/dviide-framework.git
+cd dviide-framework
 npm install
 node backend.js
 ```
