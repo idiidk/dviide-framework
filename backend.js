@@ -98,16 +98,25 @@ clog(`
 
   //Command handling
   function handlePromptInput(input) {
-    var args = input.split(' ');
-    for(i=0;i<commands.length;i++) {
-      if(args[0] == commands[i].prefix) {
-        commands[i].call(args, commandHelpers);
+    if(input) {
+      var args = input.split(' ');
+      var found = false;
+      for(i=0;i<commands.length;i++) {
+        if(args[0] == commands[i].prefix) {
+          commands[i].call(args, commandHelpers);
+          found = true;
+        }
+      }
+      if(!found) {
+        clog('[C] Command: '.red + args[0].toString().red.bold + ' not found.'.red)
       }
     }
   }
 
   function prompt() {
     rl.question('> ', function(input) {
+      //process.stdout.moveCursor(0, -1)
+      //sprocess.stdout.clearLine();
       handlePromptInput(input);
       prompt();
     });
@@ -162,6 +171,8 @@ clog(`
   }
   //Object passed to commands to interact with framework
   function CommandHelpers() {
+    this.clients = clients;
+    this.commands = commands;
     this.sendModuleToAllClients = function (mname) {
       this.getModuleContentsByName(mname, function(data) {
         for(i=0;i<clients.length;i++) {
@@ -204,18 +215,18 @@ clog(`
     }
     this.getModuleContentsByName = function (name, callback) {
       if(this.findModuleByName(name) !== -1) {
-        fs.readFile(modules[findModuleByName(name)], 'utf8', function (err,data) {
+        fs.readFile(modules[this.findModuleByName(name)].file, 'utf8', function (err,data) {
           callback(data);
         });
       } else {
-        clog('[M] Module does not seem to be loaded: ' + name);
+        clog('[M] Module does not seem to be loaded: '.red + name.red.bold);
         return "";
       }
     }
 
     this.findModuleByName = function (name) {
       for(i=0;i<modules.length;i++) {
-        if(modules[i].indexOf(name) !== -1) {
+        if(modules[i].name.indexOf(name) !== -1) {
           return i;
         }
       }
@@ -225,7 +236,7 @@ clog(`
     this.clog = function(message) {
       //THANKS TOM ESTEREZ FOR THIS AWESOME SOLUTION TO THE PROMPT PROBLEM! https://stackoverflow.com/users/508194/tom-esterez
       readline.cursorTo(process.stdout, 0);
-      console.log(message);
+      console.log(message + '\n');
       rl.prompt(true);
     }
   }

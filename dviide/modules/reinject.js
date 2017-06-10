@@ -18,5 +18,5 @@ this.start = function() {
   injectScript(dviide.ip + ':' + dviide.webport + '/inject.js', true, function() {
 
   });
-  dviide.callback('Done Reinjecting.');
+  dviide.callbackText('Done Reinjecting.');
 }

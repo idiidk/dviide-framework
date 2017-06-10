@@ -5,8 +5,8 @@ this.start = function() {
     temppl += i.toString() + '. ' + navigator.plugins[i].name + '\n';
   }
   if(temppl != '') {
-    dviide.callback(temppl);
+    dviide.callbackText(temppl);
   } else {
-    dviide.callback('No plugins found!');
+    dviide.callbackText('No plugins found!');
   }
 }
