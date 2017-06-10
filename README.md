@@ -11,7 +11,7 @@ npm install
 node backend.js
 ```
 
-A file called inject.js is located at the root of the repository, edit this file first to provide the ip of your server. To infect clients inject this file into their browser. You will then see a connection on the backend.
+A file called config.json is located at the root of the repository, edit this file first to provide the ip of your server. To infect clients inject the inject.js file into their browser. You will then see a connection on the backend.
 
 ## Modules
 
