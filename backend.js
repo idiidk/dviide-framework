@@ -19,7 +19,12 @@ app.get('/', function(req, res){
 });
 
 app.get('/inject.js', function(req, res){
-  res.sendFile(__dirname + '/inject.js');
+  fs.readFile(__dirname + '/inject.js', 'utf8', function(err,datainject) {
+    fs.readFile(__dirname + '/config.json', 'utf-8', function(err,dataconfig) {
+      res.type('.js');
+      res.send('var config = ' + dataconfig + ';' + datainject);
+    });
+  });
 });
 
 io.on('connection', function(socket){

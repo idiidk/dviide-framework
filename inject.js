@@ -1,4 +1,4 @@
-var config = {"ip":"http://192.168.0.164", 'ioport': '3000', 'webport': '3030', "injectjquery": true}, dviide;
+var dviide;
 function injectScript(src, url, callback) {
   if(url) {
     var script = document.createElement("SCRIPT");
