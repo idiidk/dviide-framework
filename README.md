@@ -22,7 +22,8 @@ Remember I was talking about modules? Well they are easy to write and implement.
 
 To return data to the server call:
 ```
-dviide.callback('data');
+//More callback types coming soon...
+dviide.callbackText('data');
 ```
 If you want access to things such as the ip and port of the server just take a look at the dviide class in inject.js.
 
