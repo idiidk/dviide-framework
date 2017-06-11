@@ -1,7 +1,7 @@
 {
   "name": "dviide",
-  "version": "0.1.1",
-  "description": "A simple javascript injection framework for the console.",
+  "version": "0.3.6",
+  "description": "A simple javascript mitm/xss injection framework for the console.",
   "main": "backend.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
