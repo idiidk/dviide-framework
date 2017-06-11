@@ -1,6 +1,6 @@
 {
   "name": "dviide",
-  "version": "0.3.6",
+  "version": "0.5.1",
   "description": "A simple javascript mitm/xss injection framework for the console.",
   "main": "backend.js",
   "scripts": {
