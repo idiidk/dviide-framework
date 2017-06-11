@@ -8,6 +8,10 @@
   },
   "author": "Vincent Brouwer",
   "license": "MIT",
+  "repository" :
+  { "type" : "git",
+    "url" : "https://github.com/idiidk/dviide-framework.git"
+  },
   "dependencies": {
     "cli-clear": "^1.0.4",
     "colors": "^1.1.2",
