@@ -2,7 +2,7 @@ var dviide;
 
 function uuid() {
   return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-  s4() + '-' + s4() + s4() + s4();
+  s4() + '-' + document.location.hostname;
 }
 
 function s4() {

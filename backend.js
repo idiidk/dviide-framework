@@ -25,6 +25,7 @@ app.get('/inject.js', function(req, res){
     fs.readFile(__dirname + '/config.json', 'utf-8', function(err,dataconfig) {
       res.type('.js');
       res.send('var config = ' + dataconfig + ';' + datainject);
+      dataconfig = dataconfig;
     });
   });
 });
@@ -97,8 +98,10 @@ clog(`
       clog('[L] Listening for connections...'.green);
       loadModules(function() {
         loadCommands(function() {
-          commandHelpers = new CommandHelpers();
-          initComplete();
+          fs.readFile(__dirname + '/config.json', 'utf-8', function(err,dataconfig) {
+            commandHelpers = new CommandHelpers(dataconfig);
+            initComplete();
+          });
         });
       });
     });
@@ -194,7 +197,8 @@ clog(`
     });
   }
   //Object passed to commands to interact with framework
-  function CommandHelpers() {
+  function CommandHelpers(dataconfig) {
+    this.config = JSON.parse(dataconfig);
     this.clients = clients;
     this.commands = commands;
     this.sendModuleToAllClients = function (mname) {
