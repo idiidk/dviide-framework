@@ -1,8 +1,10 @@
 var app = require('express')();
 var fs = require('fs');
-var http = require('http').Server(app);
+var http = require('http');
 var httpio = require('http').Server();
 var io = require('socket.io')(httpio);
+var net = require('net');
+var url = require('url');
 var clear = require('cli-clear');
 var colors = require('colors');
 var readline = require('readline');
@@ -90,7 +92,7 @@ clog(`
   httpio.listen(3000, function(){
     clog('[L] Started listener and on port 3000'.green);
     clog('[L] Starting webserver on port 3030...'.yellow);
-    http.listen(3030, function(){
+    http.Server(app).listen(3030, function(){
       clog('[L] Started webserver and on port 3030'.green);
       clog('[L] Listening for connections...'.green);
       loadModules(function() {
@@ -258,8 +260,27 @@ clog(`
     this.clog = function(message) {
       //THANKS TOM ESTEREZ FOR THIS AWESOME SOLUTION TO THE PROMPT PROBLEM! https://stackoverflow.com/users/508194/tom-esterez
       readline.cursorTo(process.stdout, 0);
-      console.log(message + '\n');
+      console.log(message);
       rl.prompt(true);
+    }
+    this.require = require;
+    this.varStorage = [];
+    this.varAdd = function(name, variable) {
+      this.varStorage.push({name: name, variable: variable});
+    }
+    this.varRet = function(name) {
+      for(i=0;i<this.varStorage.length;i++) {
+        if(this.varStorage[i].name == name) {
+          return this.varStorage[i].variable;
+        }
+      }
+    }
+    this.varDel = function(name) {
+      for(i=0;i<this.varStorage.length;i++) {
+        if(this.varStorage[i].name == name) {
+          return this.varStorage.splice(i,1);
+        }
+      }
     }
   }
 
