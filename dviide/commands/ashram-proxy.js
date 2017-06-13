@@ -52,6 +52,9 @@ this.call = function(args, mh) {
           }
         }));
         mh.varRet('ashramproxy').on('connect', function(req, cltSocket, head) {
+          req.on('error', function() {
+
+          });
           try {
             var srvUrl = url.parse(`http://${req.url}`);
             var srvSocket = net.connect(srvUrl.port, srvUrl.hostname, () => {
