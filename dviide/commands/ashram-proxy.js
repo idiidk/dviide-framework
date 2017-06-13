@@ -57,13 +57,16 @@ this.call = function(args, mh) {
           });
           try {
             var srvUrl = url.parse(`http://${req.url}`);
-            var srvSocket = net.connect(srvUrl.port, srvUrl.hostname, () => {
+            var srvSocket = net.connect(srvUrl.port, srvUrl.hostname, function() {
               cltSocket.write('HTTP/1.1 200 Connection Established\r\n' +
               'Proxy-agent: Node.js-Proxy\r\n' +
               '\r\n');
               srvSocket.write(head);
               srvSocket.pipe(cltSocket);
               cltSocket.pipe(srvSocket);
+            });
+            srvSocket.on('error', function() {
+
             });
           } catch(err) {
             mh.clog('[AshRam] '.red + err.red);
