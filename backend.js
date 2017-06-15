@@ -237,7 +237,7 @@ clog(`
     }
 
     this.sendModuleBySocket = function (mname, socket) {
-      getModuleContentsByName(mname, function(data) {
+      this.getModuleContentsByName(mname, function(data) {
         socket.emit("command", {script: data});
       });
     }
@@ -286,6 +286,9 @@ clog(`
         }
       }
     }
+    this.setOnLoad = function(name) {
+      olm = name;
+    }
   }
 
   function checkIp(req) {
@@ -320,7 +323,7 @@ clog(`
       clog(message);
       clients.push(new Client(data.id, socket));
       if(olm) {
-        sendModuleBySocket(olm, socket);
+        commandHelpers.sendModuleBySocket(olm, socket);
       }
     } else {
       if(message.indexOf('disconnected') === -1) {
