@@ -4,7 +4,7 @@
   "description": "A simple javascript mitm/xss injection framework for the console.",
   "main": "backend.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "standard"
   },
   "author": "Vincent Brouwer",
   "license": "MIT",
@@ -19,5 +19,8 @@
     "request": "^2.81.0",
     "server-destroy": "^1.0.1",
     "socket.io": "^2.0.2"
+  },
+  "devDependencies": {
+    "standard": "^10.0.2"
   }
 }

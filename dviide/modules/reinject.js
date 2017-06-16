@@ -1,6 +1,6 @@
-this.name = 'reinject';
-this.start = function() {
-  dviide.disconnect();
-  dviide.connect();
-  dviide.callbackText('Done Reinjecting.');
+this.name = 'reinject'
+this.start = function () {
+  Dviide.disconnect()
+  Dviide.connect()
+  Dviide.callbackText('Done Reinjecting.')
 }

