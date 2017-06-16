@@ -37,7 +37,7 @@ this.call = function (args, mh) {
     var net = mh.require('net')
     var url = mh.require('url')
     var enableDestroy = mh.require('server-destroy')
-    if (args[1] === 'enable') {
+    if (args[1] === 'start') {
       if (mh.varRet('ashramproxy')) {
         mh.clog('[AshRam] Proxy already running!'.red)
       } else {
@@ -141,7 +141,7 @@ this.call = function (args, mh) {
         })
         enableDestroy(mh.varRet('ashramproxy'))
       }
-    } else if (args[1] === 'disable') {
+    } else if (args[1] === 'stop') {
       mh.varRet('ashramproxy').unref()
       mh.varRet('ashramproxy').destroy()
       mh.varDel('ashramproxy')
