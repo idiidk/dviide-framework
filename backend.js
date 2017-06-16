@@ -219,7 +219,7 @@ function CommandHelpers (dataconfig) {
     this.getModuleContentsByName(mname, function (data) {
       if (clients[idnum]) {
         for (var i = 0; i < clients.length; i++) {
-          if (i === idnum) {
+          if (i === parseInt(idnum)) {
             clients[i].socket.emit('command', {script: data})
             clog('[M] Sent payload to: '.green + clients[i].id.green.bold)
           }

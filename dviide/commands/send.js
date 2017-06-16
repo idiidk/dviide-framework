@@ -5,13 +5,13 @@ this.call = function (args, mh) {
       mh.sendModuleToAllClients(args[2])
     } else if (args[1] === 'id') {
       if (args[3]) {
-        mh.sendModuleById(args[2], args[3])
+        mh.sendModuleById(args[3], args[2])
       } else {
-        mh.clog('[M] Please specify an id to use!'.red)
+        mh.clog('[M] Please specify an id and module to use!'.red)
       }
     } else if (args[1] === 'idnum') {
       if (args[3]) {
-        mh.sendModuleByIdNum(args[2], args[3])
+        mh.sendModuleByIdNum(args[3], args[2])
       } else {
         mh.clog('[M] Please specify a module and num to use!'.red)
       }

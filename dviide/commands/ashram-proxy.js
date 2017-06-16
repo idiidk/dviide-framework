@@ -14,7 +14,7 @@ this.call = function (args, mh) {
     return str
   }
   function getPage (url, callback) {
-    request.get(url, function (err, resget, body) {
+    var req = request.get(url, function (err, resget, body) {
       if (resget && resget.statusCode !== 404) {
         callback(err, resget, body)
       } else {
@@ -29,6 +29,9 @@ this.call = function (args, mh) {
           }
         })
       }
+    })
+    req.on('error', function() {
+      
     })
   }
   if (args.length === 2) {
