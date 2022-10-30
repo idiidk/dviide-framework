@@ -18,7 +18,7 @@
     "express": "^4.15.3",
     "request": "^2.81.0",
     "server-destroy": "^1.0.1",
-    "socket.io": "^2.0.2"
+    "socket.io": "^3.0.0"
   },
   "devDependencies": {
     "standard": "^10.0.2"
